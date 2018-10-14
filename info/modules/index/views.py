@@ -1,9 +1,9 @@
-from info import redis_store
+from utils.captcha.captcha import captcha
 from . import index_blue
-from flask import session
+from flask import render_template,current_app
 @index_blue.route("/")
 def hello_world():
-
+    from info import redis_store
     redis_store.set("name","wangwu")
 
     print(redis_store.get("name"))
@@ -19,4 +19,17 @@ def hello_world():
     # logging.warning("警告信息1")
     # logging.error("错误信息1")
 
-    return "helloworld"
+    return render_template("news/index.html")
+
+@index_blue.route('/img_data')
+def img_data():
+
+    name,text,image_data = captcha.generate_captcha()
+    return image_data
+
+
+@index_blue.route('/favicon.ico')
+def favicon():
+
+
+    return current_app.send_static_file("news/favicon.ico")

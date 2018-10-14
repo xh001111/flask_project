@@ -1,9 +1,6 @@
-import logging
-
-from flask import session
-
 from info import create_app, db
 from flask_script import Manager
+from info import models
 from flask_migrate import Migrate,MigrateCommand
 
 app = create_app("develop")
@@ -13,8 +10,6 @@ manager = Manager(app)
 Migrate(app,db)
 
 manager.add_command("db",MigrateCommand)
-
-
 
 
 if __name__ == "__main__":
