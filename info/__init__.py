@@ -9,6 +9,7 @@ from config import config_dict
 import redis
 redis_store = None
 db = SQLAlchemy()
+
 def create_app(dict_name):
     app = Flask(__name__)
     config = config_dict.get(dict_name)
@@ -19,11 +20,11 @@ def create_app(dict_name):
     # SQLAlchemy(app)
     db.init_app(app)
     Session(app)
-    from info.modules.index import index_blue
-    app.register_blueprint(index_blue)
+
     global redis_store
     redis_store = redis.StrictRedis(host=config.REDIS_HOST,port=config.REDIS_PORT,decode_responses=True)
-
+    from info.modules.index import index_blue
+    app.register_blueprint(index_blue)
     return app
 
 def log_file(LEVEL):

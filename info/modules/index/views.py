@@ -1,9 +1,10 @@
 from utils.captcha.captcha import captcha
 from . import index_blue
 from flask import render_template,current_app
+from info import redis_store
 @index_blue.route("/")
 def hello_world():
-    from info import redis_store
+
     redis_store.set("name","wangwu")
 
     print(redis_store.get("name"))
