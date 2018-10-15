@@ -16,7 +16,7 @@ def create_app(dict_name):
     log_file(config.LEVEL)
     app.config.from_object(config)
 
-    CSRFProtect(app)
+    # CSRFProtect(app)
     # SQLAlchemy(app)
     db.init_app(app)
     Session(app)
@@ -24,10 +24,10 @@ def create_app(dict_name):
     global redis_store
     redis_store = redis.StrictRedis(host=config.REDIS_HOST,port=config.REDIS_PORT,decode_responses=True)
     from info.modules.index import index_blue
-    from info.modules.passport import image_code
+    from info.modules.passport import passport_blue
     app.register_blueprint(index_blue)
 
-    app.register_blueprint(image_code)
+    app.register_blueprint(passport_blue)
     print(app.url_map)
     return app
 
