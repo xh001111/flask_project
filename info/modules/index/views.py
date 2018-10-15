@@ -1,6 +1,6 @@
 from utils.captcha.captcha import captcha
 from . import index_blue
-from flask import render_template,current_app
+from flask import render_template, current_app, request, jsonify
 from info import redis_store
 @index_blue.route("/")
 def hello_world():
@@ -22,11 +22,7 @@ def hello_world():
 
     return render_template("news/index.html")
 
-@index_blue.route('/img_data')
-def img_data():
 
-    name,text,image_data = captcha.generate_captcha()
-    return image_data
 
 
 @index_blue.route('/favicon.ico')

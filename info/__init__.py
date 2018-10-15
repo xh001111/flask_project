@@ -24,7 +24,11 @@ def create_app(dict_name):
     global redis_store
     redis_store = redis.StrictRedis(host=config.REDIS_HOST,port=config.REDIS_PORT,decode_responses=True)
     from info.modules.index import index_blue
+    from info.modules.passport import image_code
     app.register_blueprint(index_blue)
+
+    app.register_blueprint(image_code)
+    print(app.url_map)
     return app
 
 def log_file(LEVEL):
