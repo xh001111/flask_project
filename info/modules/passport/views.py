@@ -9,6 +9,15 @@ from info import redis_store, constants, db
 import re
 import random
 from info.models import  User
+# 退出用户
+@passport_blue.route('/logout', methods=['POST'])
+def logout():
+    session.pop("user_id",None)
+    session.pop("nick_name",None)
+    session.pop("mobile",None)
+
+    return jsonify(erron=RET.OK,errmsg = "退出成功")
+
 # 登陆用户
 @passport_blue.route('/login', methods=['POST'])
 def login():
@@ -118,12 +127,13 @@ def sms_code():
     ccp = CCP()
     try:
         result = ccp.send_template_sms(mobile,[sms_code, constants.IMAGE_CODE_REDIS_EXPIRES/60], 1)
-    # 10. 存储验证码到redis中
+
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.THIRDERR, errmsg="云通讯发送异常")
     if result == -1:
         return jsonify(errno=RET.DATAERR, errmsg="短信发送失败")
+    # 10. 存储验证码到redis中
     try:
         redis_store.set("sms_code:%s"% mobile,sms_code,constants.IMAGE_CODE_REDIS_EXPIRES)
     except Exception as e:
