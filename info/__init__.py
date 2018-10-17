@@ -6,7 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_session import Session
 from config import config_dict
+from flask_wtf.csrf import generate_csrf
 import redis
+
+from utils.common import index_class
+
 redis_store = None
 db = SQLAlchemy()
 
@@ -16,7 +20,7 @@ def create_app(dict_name):
     log_file(config.LEVEL)
     app.config.from_object(config)
 
-    # CSRFProtect(app)
+    CSRFProtect(app)
     # SQLAlchemy(app)
     db.init_app(app)
     Session(app)
@@ -25,9 +29,18 @@ def create_app(dict_name):
     redis_store = redis.StrictRedis(host=config.REDIS_HOST,port=config.REDIS_PORT,decode_responses=True)
     from info.modules.index import index_blue
     from info.modules.passport import passport_blue
+    from info.modules.news import news_blue
+    app.register_blueprint(news_blue)
     app.register_blueprint(index_blue)
 
     app.register_blueprint(passport_blue)
+    app.add_template_filter(index_class,"index_class")
+
+    @app.after_request
+    def after_request(resp):
+        value = generate_csrf()
+        resp.set_cookie("csrf_token",value)
+        return resp
     print(app.url_map)
     return app
 

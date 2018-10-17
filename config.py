@@ -5,8 +5,11 @@ import redis
 
 class Config(object):
     DEBUG = True
+    # 数据库配置
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@localhost:3306/infomation15"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
     SECRET_KEY = "aslkdjsakldjsald"
     REDIS_HOST = "127.0.0.1"
     REDIS_PORT = 6379
