@@ -58,6 +58,7 @@ class User(BaseModel, db.Model):
 
     # 当前用户所发布的新闻
     news_list = db.relationship('News', backref='user', lazy='dynamic')
+    comment_likes = db.relationship("CommentLike")
 
     @property
     def password(self):

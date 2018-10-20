@@ -1,3 +1,28 @@
+{% extends 'news/base.html' %}
+{% block title %}
+    首页-新经资讯
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript" src="../../static/news/js/index.js"></script>
+{% endblock %}
+
+
+{% block headerBlock %}
+    {% for data in data.categories %}
+        <li class="{% if data.id==1 %} active{% endif %}" data-cid="{{ data.id }}"><a href="javascript:;">{{ data.name }}</a></li>
+    {% endfor %}
+{% endblock %}
+
+{# 正文部分 #}
+{% block content %}
+    <ul class="list_con fl">
+
+    </ul>
+{% endblock %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +39,6 @@
         <div class="header">
             <a href="#" class="logo fl"><img src="../../static/news/images/logo.png" alt="logo"></a>
             <ul class="menu fl">
-
 
 
                 {% for data in data.categories %}
@@ -50,7 +74,7 @@
 
         </div>
     </div>
-    
+
     <div class="conter_con">
         <ul class="list_con fl">
 {#            <li>#}
@@ -121,7 +145,7 @@
 {#            </ul>#}
         </div>
     </div>
-    <div class="footer">        
+    <div class="footer">
         <div class="footer_links">
             <a href="">关于我们</a>
             <span>|</span>
@@ -136,7 +160,7 @@
 电话：010-****888    京ICP备*******8号
         </p>
     </div>
-    
+
     <!-- 登录表单 -->
     <form class="login_form_con">
         <div class="login_form">

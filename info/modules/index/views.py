@@ -1,11 +1,11 @@
-from utils.captcha.captcha import captcha
+from utils.common import user_login_data
 from utils.response_code import RET
 from . import index_blue
-from flask import render_template, current_app, request, jsonify,session
-from info import redis_store
-from info.models import User, News, Category
+from flask import render_template, current_app, request, jsonify, session, g
+from info.models import  News, Category
 
 @index_blue.route('/newslist')
+@user_login_data
 def news_list():
     cid = request.args.get("cid","1")
     page = request.args.get("page","1")
@@ -18,6 +18,7 @@ def news_list():
         page = 1
         per_page = 10
     try:
+
         filters = []
         if cid !="1":
             filters.append(News.category_id == cid)
@@ -34,20 +35,11 @@ def news_list():
 
     return jsonify(errno = RET.OK,errmsg="返回成功",totalPage=totalPage,currentPage=currentPage,newsList=newsList)
 
+
 @index_blue.route("/")
+@user_login_data
 def hello_world():
 
-    user_id = session.get("user_id")
-    user = None
-
-    try:
-        user = User.query.get(user_id)
-    except Exception as e:
-        current_app.logger.error(e)
-
-
-    # redis_store.set("name","wangwu")
-    # print(redis_store.get("name"))
     new_list = News.query.order_by(News.clicks.desc()).limit(10).all()
 
     click_news_list = []
@@ -60,18 +52,14 @@ def hello_world():
         cotegory_list.append(cotegory.to_dict())
     dict_data = {
         # 如果user存在返回左边，如果不存在返回右边
-        "user_info": user.to_dict() if user else "",
+        "user_info": g.user.to_dict() if g.user else "",
         "click_news_list" : click_news_list,
         "categories":cotegory_list
 
     }
     return render_template("news/index.html",data=dict_data)
 
-
-
-
 @index_blue.route('/favicon.ico')
 def favicon():
-
 
     return current_app.send_static_file("news/favicon.ico")

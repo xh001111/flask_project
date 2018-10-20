@@ -36,7 +36,7 @@ def login():
         return jsonify(RET.NODATA,errmsg = "用户不存在")
     # 5. 判断密码是否一致
     # if password != user.password_hash:
-    if user.check_passowrd(password):
+    if not user.check_passowrd(password):
         return jsonify(RET.DATAERR,errmsg = "密保不一致")
 
     # 6. 保存用户的登陆状态在session
@@ -99,7 +99,9 @@ def sms_code():
     mobile = dict_data.get("mobile")
     image_code = dict_data.get("image_code")
     image_code_id = dict_data.get("image_code_id")
+
     # 2. 判断参数是否为空
+
     if not all([mobile,image_code,image_code_id]):
         return jsonify(errno=RET.PARAMERR,errmsg="参数验证不全")
     # 3. 验证手机号参数

@@ -30,8 +30,10 @@ def create_app(dict_name):
     from info.modules.index import index_blue
     from info.modules.passport import passport_blue
     from info.modules.news import news_blue
+    from info.modules.user import user_blue
     app.register_blueprint(news_blue)
     app.register_blueprint(index_blue)
+    app.register_blueprint(user_blue)
 
     app.register_blueprint(passport_blue)
     app.add_template_filter(index_class,"index_class")
