@@ -1,21 +1,100 @@
-<!DOCTYPE html>
+{% extends "news/base.html" %}
+
+{% block title %}
+    用户概况
+{% endblock %}
+
+{% block right %}
+    <link rel="stylesheet" type="text/css" href="../../static/news/css/jquery.pagination.css">
+    <script type="text/javascript" src="../../static/news/js/jquery.pagination.min.js"></script>
+    <script type="text/javascript" src="../../static/news/js/other.js"></script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="conter_con">
+        <div class="user_menu_con fl">
+            <div class="user_center_pic">
+                {% if data.user_info.avatar_url %}
+                    <img src="{{ data.user_info.avatar_url }}" alt="用户图片">
+                {% else %}
+                    <img src="../../static/news/images/user_pic.png" alt="用户图片">
+                {% endif %}
+
+            </div>
+            <div class="user_center_name">{{ data.user_info.nick_name }}</div>
+
+            <ul class="other_detail">
+                {% if data.user_info.gender == "WOMAN" %}
+                    <li>性 别：女</li>
+                {% else %}
+                    <li>性 别：男</li>
+                <li>签 名：{{ data.user_info.signature }}</li>
+                {% endif %}
+            </ul>
+
+            <div class="focus_other">
+
+                <a href="javascript:;" data-userid = {{ data.user_info.id }} class="focus" style="display:{% if data.is_followed %} none {% else %}block {% endif %}">关注</a>
+                <a href="javascript:;" data-userid = {{ data.user_info.id }} class="focused"><span class="out" style="display:{% if data.is_followed %} block {% else %} none {% endif %}">已关注</span><span class="over">取消关注</span></a>
+            </div>
+
+        </div>
+
+        <div class="user_con fr">
+            <div class="other_collect">
+                <h3>他的文章</h3>
+                <ul class="article_list">
+                    {% for news in data.news_list %}
+                        <li><a href="#">{{ news.title }}</a><span>{{ news.create_time }}</span></li>
+
+                    {% endfor %}
+
+{#                    <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>#}
+{#                    <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>#}
+{#                    <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>#}
+{#                    <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>#}
+{#                    <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>#}
+{#                    <li><a href="#">智能音箱“不智能”：这次轮到三星语音助手Bixby被吐槽了</a><span>2018-1-17</span></li>#}
+                </ul>
+
+                <div id="pagination" class="page"></div>
+                <script>
+                    $(function(){
+                        $("#pagination").pagination({
+                            currentPage: 2,
+                            totalPage: 3,
+                            callback: function(current) {
+                                getNewsList(current);
+                            }
+                        });
+                    });
+                </script>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>用户概况</title>
-    <link rel="stylesheet" type="text/css" href="../css/reset.css">
-    <link rel="stylesheet" type="text/css" href="../css/jquery.pagination.css">
-    <link rel="stylesheet" type="text/css" href="../css/main.css">
-    <script type="text/javascript" src="../js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.pagination.min.js"></script>
-    <script type="text/javascript" src="../js/other.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/news/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../../static/news/css/jquery.pagination.css">
+    <link rel="stylesheet" type="text/css" href="../../static/news/css/main.css">
+    <script type="text/javascript" src="../../static/news/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="../../static/news/js/jquery.pagination.min.js"></script>
+    <script type="text/javascript" src="../../static/news/js/other.js"></script>
 </head>
 <body>
     <div class="header_con">
         <div class="header">
-            <a href="#" class="logo fl"><img src="../images/logo.png" alt="logo"></a>
+            <a href="#" class="logo fl"><img src="../../static/news/images/logo.png" alt="logo"></a>
             <div class="user_login fr" style="display: block;">
-                <img src="../images/person01.png" class="lgin_pic">
+                <img src="../../static/news/images/person01.png" class="lgin_pic">
                 <a href="#">张大山</a>
                 <a href="#">退出</a>
             </div>
@@ -25,7 +104,7 @@
     <div class="conter_con">
         <div class="user_menu_con fl">
             <div class="user_center_pic">
-                <img src="../images/user_pic.png" alt="用户图片">
+                <img src="../../static/news/images/user_pic.png" alt="用户图片">
             </div>
             <div class="user_center_name">用户李思</div>
 
@@ -132,7 +211,7 @@
             <div class="form_group">                
                 <input type="password" name="code_pwd" class="code_pwd">
                 <div class="input_tip">图形验证码</div>
-                <img src="../images/pic_code.png" class="get_pic_code">
+                <img src="../../static/news/images/pic_code.png" class="get_pic_code">
                 <div class="error_tip">图形码不能为空</div>
             </div>
             

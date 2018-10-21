@@ -28,7 +28,7 @@
             {% if data.user_info %}
                 <div class="user_login fr">
                     {% if data.user_info.avatar_url %}
-                        <img src="{{ data.user_info.avater_url }}" class="lgin_pic">
+                        <img src="{{ data.user_info.avatar_url }}" class="lgin_pic">
                     {% else %}
                         <img src="../../static/news/images/person01.png" class="lgin_pic">
                     {% endif %}
@@ -56,16 +56,17 @@
 
     {% block right %}
         <div class="rank_con fr">
-            <div class="rank_title">
-                {% block author %}
+            {% block author %}
 
-                {% endblock %}
+            {% endblock %}
+            <div class="rank_title">
+
             <h3>点击排行</h3>
             </div>
             {% for news in data.click_news_list %}
                 <ul class="rank_list">
 
-                <li><span class="{{ loop.index | index_class }}">{{ loop.index }}</span><a href="#">{{ news.title }}</a></li>
+                <li><span class="{{ loop.index | index_class }}">{{ loop.index }}</span><a href="/news/{{ news.id }}">{{ news.title }}</a></li>
                 </ul>
             {% endfor %}
 

@@ -1,9 +1,42 @@
 from info import db
 from info.models import News, User, Comment, CommentLike
+from info.modules import news
 from utils.common import user_login_data
 from utils.response_code import RET
 from . import news_blue
 from flask import render_template, abort, g, request, jsonify, current_app
+
+
+# 请求路径: /news/followed_user
+# 请求方式: POST
+# 请求参数:user_id,action
+# 返回值: errno, errmsg
+@news_blue.route('/followed_user', methods=['POST'])
+@user_login_data
+def followed_user():
+    user_id = request.json.get("user_id")
+    action = request.json.get("action")
+
+    if not all([user_id, action]):
+        return jsonify(errno=RET.PARAMERR, errmsg="参数为空")
+
+    if not action in ["follow", "unfollow"]:
+        return jsonify(errno=RET.PARAMERR, errmsg="参数为空")
+
+    author = User.query.get(user_id)
+
+    if not author:
+        return jsonify(errno=RET.PARAMERR, errmsg="参数为空")
+
+    if action == "follow":
+        if not g.user in author.followers:
+            author.followers.append(g.user)
+        else:
+            if  g.user in author.followers:
+                author.followers.remove(g.user)
+
+    return jsonify(errno=RET.OK, errmsg="操作成功")
+
 
 # 请求路径: /news/comment_like
 # 请求方式: POST
@@ -34,10 +67,10 @@ def comment_like():
     # 7. 根据操作类型点赞或者取消点赞
     try:
         if action == "add":
-            comment_like = CommentLike.query.filter(CommentLike.comment_id == comment_id,CommentLike.user_id == g.user.id).all()
+            comment_like = CommentLike.query.filter(CommentLike.comment_id == comment_id,CommentLike.user_id == g.user.id).first()
             if not comment_like:
                 comments = CommentLike()
-                comments.user_id = g.user.id
+                comments.user_id = g.user_id
                 comments.comment_id = comment_id
 
                 db.session.add(comments)
@@ -200,6 +233,12 @@ def news_detail(news_id):
 
         comment_list.append(com_lick)
 
+    # 判断是否关注
+    is_followed = False
+    if g.user and new.user:
+        if g.user in new.user.followers:
+            is_followed = True
+
 
 
     data = {
@@ -207,7 +246,8 @@ def news_detail(news_id):
         "click_news_list":click_news_list,
         "user_info":g.user.to_dict() if g.user else "",
         "is_collect":is_collected,
-        "comments":comment_list
+        "comments":comment_list,
+        "is_followed":is_followed
 
     }
     return render_template("news/detail.html",data=data)

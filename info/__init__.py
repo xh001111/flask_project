@@ -1,7 +1,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask
+from flask import Flask, render_template, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_session import Session
@@ -9,7 +9,7 @@ from config import config_dict
 from flask_wtf.csrf import generate_csrf
 import redis
 
-from utils.common import index_class
+from utils.common import index_class, user_login_data
 
 redis_store = None
 db = SQLAlchemy()
@@ -31,11 +31,13 @@ def create_app(dict_name):
     from info.modules.passport import passport_blue
     from info.modules.news import news_blue
     from info.modules.user import user_blue
+    from info.modules.admin import admin_blue
     app.register_blueprint(news_blue)
     app.register_blueprint(index_blue)
     app.register_blueprint(user_blue)
 
     app.register_blueprint(passport_blue)
+    app.register_blueprint(admin_blue)
     app.add_template_filter(index_class,"index_class")
 
     @app.after_request
@@ -44,6 +46,14 @@ def create_app(dict_name):
         resp.set_cookie("csrf_token",value)
         return resp
     print(app.url_map)
+
+    @app.errorhandler(404)
+    @user_login_data
+    def page_not_found(e):
+        data = {
+            "user_info":g.user.to_dict() if g.user else ""
+        }
+        return render_template("news/404.html",data=data)
     return app
 
 def log_file(LEVEL):
