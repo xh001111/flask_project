@@ -35,7 +35,6 @@ def create_app(dict_name):
     app.register_blueprint(news_blue)
     app.register_blueprint(index_blue)
     app.register_blueprint(user_blue)
-
     app.register_blueprint(passport_blue)
     app.register_blueprint(admin_blue)
     app.add_template_filter(index_class,"index_class")

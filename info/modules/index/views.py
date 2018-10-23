@@ -22,7 +22,7 @@ def news_list():
         filters = []
         if cid !="1":
             filters.append(News.category_id == cid)
-        paginate = News.query.filter(*filters).order_by(News.create_time.desc()).paginate(page,per_page,False)
+        paginate = News.query.filter(*filters).filter(News.status == 0).order_by(News.create_time.desc()).paginate(page,per_page,False)
     except Exception as e :
         return jsonify(errno=RET.DBERR, errmsg="分页获取失败")
     totalPage = paginate.pages

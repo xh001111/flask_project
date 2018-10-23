@@ -1,11 +1,9 @@
 from info import db
 from info.models import News, User, Comment, CommentLike
-from info.modules import news
 from utils.common import user_login_data
 from utils.response_code import RET
 from . import news_blue
 from flask import render_template, abort, g, request, jsonify, current_app
-
 
 # 请求路径: /news/followed_user
 # 请求方式: POST
@@ -218,7 +216,6 @@ def news_detail(news_id):
     comment_ids = []
     for comment_like in comment_likes:
         comment_ids.append(comment_like.comment_id)
-
 
     # 将评论对象列表转成字典列表
     comment_list = []
